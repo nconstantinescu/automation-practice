@@ -1,0 +1,97 @@
+"""
+This module contains shared fixtures.
+"""
+import json
+import pytest
+import selenium.webdriver
+import tempfile
+
+@pytest.fixture()
+def config():
+    # Read the file
+    with open('config.json') as config_file:
+        config = json.load(config_file)
+
+    # Assert values are acceptable
+    assert config['browser'] in ['Firefox', 'Chrome', 'Headless Chrome']
+    assert isinstance(config['implicit_wait'], int)
+    assert config['implicit_wait'] > 0
+
+    # Return config so it can be used
+    return config
+
+
+# browser fixture with implicit wait
+@pytest.fixture
+def browser(config):
+    # Initialize the ChromeDriver instance
+    if config['browser'] == 'Firefox':
+        b = selenium.webdriver.Firefox()
+    elif config['browser'] == 'Chrome':
+        b = selenium.webdriver.Chrome()
+    elif config['browser'] == 'Headless Chrome':
+        opts = selenium.webdriver.ChromeOptions()
+        opts.add_argument('headless')
+        b = selenium.webdriver.Chrome(options=opts)
+    else:
+        raise Exception(f'Browser "{config["browser"]}" is not supported')
+
+    # Make its calls wait up to 10 seconds for elements to appear
+    b.implicitly_wait(config['implicit_wait'])
+
+    # Return the WebDriver instance for the setup
+    b.maximize_window()
+    yield b
+
+    # Quit the Webdriver instance for the cleanup
+    b.quit()
+
+
+# Browser fixture without implicit wait
+@pytest.fixture
+def browsers(config):
+    # Initialize the ChromeDriver instance
+    if config['browser'] == 'Firefox':
+        b = selenium.webdriver.Firefox()
+    elif config['browser'] == 'Chrome':
+        b = selenium.webdriver.Chrome()
+    elif config['browser'] == 'Headless Chrome':
+        opts = selenium.webdriver.ChromeOptions()
+        opts.add_argument('headless')
+        b = selenium.webdriver.Chrome(options=opts)
+    else:
+        raise Exception(f'Browser "{config["browser"]}" is not supported')
+
+    # Return the WebDriver instance for the setup
+    b.maximize_window()
+    yield b
+
+    # Quit the Webdriver instance for the cleanup
+    b.quit()
+
+
+
+
+# Browser fixture that creates a temporary download folder and deletes it
+# @pytest.fixture
+# def browser_download(config):
+#     with tempfile.TemporaryDirectory as tmpdir:
+#
+#       # Initialize the ChromeDriver instance
+#       if config['browser'] == 'Firefox':
+#           b = selenium.webdriver.Firefox()
+#       elif config['browser'] == 'Chrome':
+#           b = selenium.webdriver.Chrome()
+#       elif config['browser'] == 'Headless Chrome':
+#           opts = selenium.webdriver.ChromeOptions()
+#           opts.add_argument('headless')
+#           b = selenium.webdriver.Chrome(options=opts)
+#       else:
+#           raise Exception(f'Browser "{config["browser"]}" is not supported')
+#
+#       # Return the WebDriver instance for the setup
+#       b.maximize_window()
+#       yield b
+#
+#       # Quit the Webdriver instance for the cleanup
+#       b.quit()
