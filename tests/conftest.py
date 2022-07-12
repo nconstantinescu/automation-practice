@@ -4,7 +4,7 @@ This module contains shared fixtures.
 import json
 import pytest
 import selenium.webdriver
-import tempfile
+
 
 @pytest.fixture()
 def config():
@@ -68,30 +68,3 @@ def browsers(config):
 
     # Quit the Webdriver instance for the cleanup
     b.quit()
-
-
-
-
-# Browser fixture that creates a temporary download folder and deletes it
-# @pytest.fixture
-# def browser_download(config):
-#     with tempfile.TemporaryDirectory as tmpdir:
-#
-#       # Initialize the ChromeDriver instance
-#       if config['browser'] == 'Firefox':
-#           b = selenium.webdriver.Firefox()
-#       elif config['browser'] == 'Chrome':
-#           b = selenium.webdriver.Chrome()
-#       elif config['browser'] == 'Headless Chrome':
-#           opts = selenium.webdriver.ChromeOptions()
-#           opts.add_argument('headless')
-#           b = selenium.webdriver.Chrome(options=opts)
-#       else:
-#           raise Exception(f'Browser "{config["browser"]}" is not supported')
-#
-#       # Return the WebDriver instance for the setup
-#       b.maximize_window()
-#       yield b
-#
-#       # Quit the Webdriver instance for the cleanup
-#       b.quit()
