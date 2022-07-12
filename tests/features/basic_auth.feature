@@ -16,7 +16,7 @@ Feature: Basic Authentication
 
   Scenario: Correct user password combination
     When the user inputs the correct username and password combination
-    Then a simple JavaScript alert is triggered and interacteble
+    Then a simple JavaScript alert is triggered and interactable
 
   Scenario: Selecting the Cancel button
     When the cancel button from the login form is clicked
